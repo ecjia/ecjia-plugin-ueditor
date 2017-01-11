@@ -156,7 +156,7 @@ class UEditorController extends BaseController
             'fieldName'     => $this->config['catcherFieldName'],
         );
         
-        $sources = \Input::get($upConfig['fieldName']);
+        $sources = \RC_Request::get($upConfig['fieldName']);
         $list = array();
         foreach ($sources as $imgUrl) {
             $upConfig['imgUrl'] = $imgUrl;
