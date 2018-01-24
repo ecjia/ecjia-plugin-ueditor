@@ -1,4 +1,4 @@
-<?php namespace Royalcms\Component\UEditor\Uploader;
+<?php
 //
 //    ______         ______           __         __         ______
 //   /\  ___\       /\  ___\         /\_\       /\_\       /\  __ \
@@ -44,6 +44,7 @@
 //
 //  ---------------------------------------------------------------------------------
 //
+namespace Royalcms\Component\UEditor\Uploader;
 
 /**
  * Class UploadScrawl
@@ -84,7 +85,7 @@ class UploadScrawl extends UploadBase
             return false;
         }
         
-        $filesystem = RC_Storage::disk();
+        $filesystem = \RC_Storage::disk();
 
         //创建目录失败
         if (! $filesystem->exists($dirname) && ! $filesystem->mkdir($dirname)) {
@@ -118,3 +119,5 @@ class UploadScrawl extends UploadBase
         return strtolower(strrchr($this->oriName, '.'));
     }
 }
+
+// end
