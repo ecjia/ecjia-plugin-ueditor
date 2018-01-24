@@ -45,8 +45,6 @@
 //  ---------------------------------------------------------------------------------
 //
 
-use Royalcms\Component\Support\Facades\Filesystem;
-
 /**
  * 获取本地文件列表
  * @author royalwang
@@ -75,7 +73,7 @@ class FileManager
         /* 获取文件列表 */
         $path = \RC_Upload::upload_path() . ltrim($this->path, '/');
 
-        $files = Filesystem::disk()->filelist($path, $this->allowFiles, $start, $size);
+        $files = RC_Storage::disk()->filelist($path, $this->allowFiles, $start, $size);
         if (!count($files)) {
             return array(
                 "state" => "no match file",

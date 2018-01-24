@@ -45,8 +45,6 @@
 //  ---------------------------------------------------------------------------------
 //
 
-use Royalcms\Component\Support\Facades\Filesystem;
-
 /**
  * Class UploadScrawl
  * 涂鸦上传
@@ -86,7 +84,7 @@ class UploadScrawl extends UploadBase
             return false;
         }
         
-        $filesystem = Filesystem::disk();
+        $filesystem = RC_Storage::disk();
 
         //创建目录失败
         if (! $filesystem->exists($dirname) && ! $filesystem->mkdir($dirname)) {

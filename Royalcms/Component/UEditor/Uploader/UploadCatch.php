@@ -45,8 +45,6 @@
 //  ---------------------------------------------------------------------------------
 //
 
-use Royalcms\Component\Support\Facades\Filesystem;
-
 /**
  * Class UploadCatch
  * 图片远程抓取
@@ -107,7 +105,7 @@ class UploadCatch  extends UploadBase
             return false;
         }
         
-        $filesystem = Filesystem::disk();
+        $filesystem = RC_Storage::disk();
 
         //创建目录失败
         if (! $filesystem->exists($dirname) && ! $filesystem->mkdir($dirname)) {

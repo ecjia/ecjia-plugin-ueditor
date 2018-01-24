@@ -45,8 +45,6 @@
 //  ---------------------------------------------------------------------------------
 //
 
-use Royalcms\Component\Support\Facades\Filesystem;
-
 /**
  *
  *
@@ -93,7 +91,7 @@ class UploadFile  extends UploadBase
             return false;
         }
         
-        $filesystem = Filesystem::disk();
+        $filesystem = RC_Storage::disk();
         
         //创建目录失败
         if (! $filesystem->exists($dirname) && ! $filesystem->mkdir($dirname)) {
