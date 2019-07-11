@@ -54,7 +54,7 @@ class ueditor extends \Royalcms\Component\Editor\Editor
 
 	private $editor_id;
 
-    private $first_init = false;
+    static private $first_init = false;
 	
 	/**
 	 * 编辑器模式
@@ -73,29 +73,33 @@ class ueditor extends \Royalcms\Component\Editor\Editor
 		    $this->mode = 'standard';
 		}
 
+        /**
+         * page loading editor js and css file
+         */
+        RC_Hook::do_action('editor_setting_first_init');
 
-		if (empty($this->first_init)) {
-
-		    if (! RC_Hook::did_action('editor_setting_first_init')) {
-                $home_url = RC_Plugin::plugins_url('/', __FILE__) . 'resources/';
-                RC_Script::enqueue_script('ecjia-ueditor-js', "{$home_url}ueditor.all.min.js");
-            }
-
-            /**
-             * page loading editor js and css file
-             */
-            RC_Hook::do_action('editor_setting_first_init');
-
-			$this->editor_id = $editor_id;
-
-		    $this->first_init = true;
-		}
+        $this->editor_id = $editor_id;
 	}
 
-	public function enqueue_scripts() {}
+    /**
+     * 加载编辑器JS脚本
+     */
+	public function enqueue_scripts()
+    {
+
+        if (empty(self::$first_init)) {
+            $home_url = RC_Plugin::plugins_url('/', __FILE__) . 'resources/';
+            RC_Script::register_script('ueditor', "{$home_url}ueditor.all.min.js", [], '1.4.3', 1);
+
+            self::$first_init = true;
+        }
+
+    }
 
 	public function editor_js()
 	{
+        RC_Script::print_scripts('ueditor');
+
 		echo $this->create($this->editor_id, '');
 	}
 
@@ -123,6 +127,7 @@ class ueditor extends \Royalcms\Component\Editor\Editor
 		$editor = <<<STR
 				<input type="hidden" id="{$item}" name="{$item}" value="{$input_value}" />
 				<script type="text/plain" name="{$item}" id="container"></script>
+<!--				<script type="text/javascript" src="{$home_url}ueditor.all.min.js"></script>-->
 				<script type="text/javascript">
 					var cBox_{$item} = $('#$item');
 					var editor_{$item} = UE.getEditor('$item', $editor_config_json);
