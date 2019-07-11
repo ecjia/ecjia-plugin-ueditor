@@ -133,16 +133,19 @@ class ueditor extends \Royalcms\Component\Editor\Editor
 					var editor_{$item} = UE.getEditor('$item', $editor_config_json);
 					editor_{$item}.addListener('ready', function() {
 						var content = cBox_{$item}.val();
+						content = content ? content : '';
 						editor_{$item}.setContent(content);
 					});
 					//触发同步
 					editor_{$item}.addListener("contentChange", function() {
 				        var content = editor_{$item}.getContent();
-					    cBox_{$item}.val(content);
+				        content = content ? content : '';
+				        cBox_{$item}.val(content);
 	                });
 					//自动同步
 					window.setInterval(function() {
-					    var content = editor_{$item}.getContent();
+					    var content = editor_{$item}.getContent(function() {});
+					    content = content ? content : '';
 					    cBox_{$item}.val(content);
 					}, 1000);
 				</script>
