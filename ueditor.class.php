@@ -53,6 +53,8 @@ class ueditor extends \Royalcms\Component\Editor\Editor
 {
 
 	private $editor_id;
+
+    private $first_init = false;
 	
 	/**
 	 * 编辑器模式
@@ -66,22 +68,27 @@ class ueditor extends \Royalcms\Component\Editor\Editor
 	private $mode;
 
 	public function editor_settings($editor_id, $set) {
-		$first_run = false;
 		$this->mode = isset($set['mode']) ? $set['mode'] : 'standard';
 		if (!in_array($this->mode, array('base', 'simple', 'code', 'standard', 'advanced'))) {
 		    $this->mode = 'standard';
 		}
 
+
 		if (empty($this->first_init)) {
 
 		    if (! RC_Hook::did_action('editor_setting_first_init')) {
-                /**
-                 * page loading editor js and css file
-                 */
-                RC_Hook::do_action('editor_setting_first_init');
+                $home_url = RC_Plugin::plugins_url('/', __FILE__) . 'resources/';
+                RC_Script::enqueue_script('ecjia-ueditor-js', "{$home_url}ueditor.all.min.js");
             }
 
+            /**
+             * page loading editor js and css file
+             */
+            RC_Hook::do_action('editor_setting_first_init');
+
 			$this->editor_id = $editor_id;
+
+		    $this->first_init = true;
 		}
 	}
 
@@ -114,26 +121,25 @@ class ueditor extends \Royalcms\Component\Editor\Editor
 		$editor_config_json = json_encode($editor_config);
 		
 		$editor = <<<STR
-				<input type="hidden" id="{$input_name}" name="{$input_name}" value="{$input_value}" />
-				<script type="text/plain" name="content" id="container"></script>
-				<script type="text/javascript" src="{$home_url}ueditor.all.min.js"></script>
+				<input type="hidden" id="{$item}" name="{$item}" value="{$input_value}" />
+				<script type="text/plain" name="{$item}" id="container"></script>
 				<script type="text/javascript">
-					var cBox = $('#$item');
-					var editor = UE.getEditor('$input_name', $editor_config_json);
-					editor.addListener('ready', function() {
-						var content = cBox.val();
-						editor.setContent(content);
+					var cBox_{$item} = $('#$item');
+					var editor_{$item} = UE.getEditor('$item', $editor_config_json);
+					editor_{$item}.addListener('ready', function() {
+						var content = cBox_{$item}.val();
+						editor_{$item}.setContent(content);
 					});
 					//触发同步
-					editor.addListener("contentChange", function() {
-						    setSync()
+					editor_{$item}.addListener("contentChange", function() {
+				        var content = editor_{$item}.getContent();
+					    cBox_{$item}.val(content);
 	                });
 					//自动同步
-					window.setInterval("setSync()", 1000);
-					function setSync() {
-					   var content = editor.getContent();
-					   cBox.val(content);
-				    }
+					window.setInterval(function() {
+					    var content = editor_{$item}.getContent();
+					    cBox_{$item}.val(content);
+					}, 1000);
 				</script>
 STR;
 		return $editor;
