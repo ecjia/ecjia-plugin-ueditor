@@ -73,10 +73,13 @@ class ueditor extends \Royalcms\Component\Editor\Editor
 		}
 
 		if (empty($this->first_init)) {
-            /**
-             * page loading editor js and css file
-             */
-		    RC_Hook::do_action('editor_setting_first_init');
+
+		    if (! RC_Hook::did_action('editor_setting_first_init')) {
+                /**
+                 * page loading editor js and css file
+                 */
+                RC_Hook::do_action('editor_setting_first_init');
+            }
 
 			$this->editor_id = $editor_id;
 		}
