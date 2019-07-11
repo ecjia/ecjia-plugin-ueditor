@@ -123,11 +123,11 @@ class ueditor extends \Royalcms\Component\Editor\Editor
 		$editor_config['lang'] = RC_Config::get('system.locale');
 		$editor_config['toolbars'] = $editor_mode[$this->mode];
 		$editor_config_json = json_encode($editor_config);
-		
+
+		//<script type="text/javascript" src="{$home_url}ueditor.all.min.js"></script>
 		$editor = <<<STR
 				<input type="hidden" id="{$item}" name="{$item}" value="{$input_value}" />
 				<script type="text/plain" name="{$item}" id="container"></script>
-<!--				<script type="text/javascript" src="{$home_url}ueditor.all.min.js"></script>-->
 				<script type="text/javascript">
 					var cBox_{$item} = $('#$item');
 					var editor_{$item} = UE.getEditor('$item', $editor_config_json);
